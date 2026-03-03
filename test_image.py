@@ -1,23 +1,21 @@
-#!/usr/bin/env python3
+import asyncio
+from generators.image_generator import ModelsLabImageGenerator
 import os
-import logging
-from bot.telegram_bot import NastyaBot
+from dotenv import load_dotenv
 
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    level=logging.INFO
-)
-logger = logging.getLogger(__name__)
+load_dotenv()
 
-def main():
-    try:
-        bot = NastyaBot()
-        logger.info("🚀 Настя запущена!")
-        bot.run()
-    except KeyboardInterrupt:
-        logger.info("👋 Настя остановлена")
-    except Exception as e:
-        logger.error(f"❌ Критическая ошибка: {e}")
+async def test():
+    gen = ModelsLabImageGenerator()
+    print("🖼 Генерирую тестовую картинку...")
+    img = await gen.generate("тест, Настя утром", scene_type='morning')
+    
+    if img:
+        with open('test_nastya.jpg', 'wb') as f:
+            f.write(img)
+        print("✅ Картинка сохранена как test_nastya.jpg")
+    else:
+        print("❌ Ошибка генерации")
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(test())
